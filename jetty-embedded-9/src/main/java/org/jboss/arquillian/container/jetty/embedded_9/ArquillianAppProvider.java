@@ -163,7 +163,7 @@ public class ArquillianAppProvider extends AbstractLifeCycle implements AppProvi
         }
 
         // Ensure "/" is Not Trailing in context paths.
-        if (context.endsWith("/") && context.length() > 0)
+        if (context.endsWith(File.separator) && context.length() > 0)
         {
             context = context.substring(0,context.length() - 1);
         }
@@ -187,9 +187,9 @@ public class ArquillianAppProvider extends AbstractLifeCycle implements AppProvi
         }
 
         // Ensure "/" is Prepended to all context paths.
-        if (context.charAt(0) != '/')
+        if (context.charAt(0) != File.separatorChar)
         {
-            context = "/" + context;
+            context = File.separator + context;
         }
 
         webAppContext.setContextPath(context);
