@@ -1,6 +1,7 @@
 package org.jboss.arquillian.container.jetty.embedded_9;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -113,13 +114,18 @@ public class ArquillianAppProvider extends AbstractLifeCycle implements AppProvi
         }
         name = name.substring(0,extOff);
 
-        archiveFile = new File(EXPORT_DIR + File.separator + archive.getName());
+        try {
+            archiveFile = File.createTempFile("jetty", archive.getName(), EXPORT_DIR);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       // archiveFile = new File(EXPORT_DIR + File.separator + archive.getName());
 
         // We are overwriting the temporary file placeholder reserved by File#createTemplateFile()
         archive.as(ZipExporter.class).exportTo(archiveFile,true);
 
         // Mark to delete when we come down
-        // exported.deleteOnExit();
+        archiveFile.deleteOnExit();
 
         // Add the context
         URI uri = archiveFile.toURI();
